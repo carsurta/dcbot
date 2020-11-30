@@ -5,7 +5,7 @@ const token = require(`./token.json`);
 client.on(`message`, message => {
     let syntaxs = message.content.split(` `);
     let command = syntaxs.shift()
-    if (command === `!팀섞`) {;
+    if (command === `!팀섞`) {
         message.reply(assignRandomizedTeam(syntaxs));
     } else if (command === `!사용법`) {
         message.reply(manual)
@@ -15,32 +15,31 @@ client.on(`message`, message => {
 assignRandomizedTeam = syntaxs => {
     let result = ''
     let numberOfTeam = checkNumberOfTeam(syntaxs);
+    if (syntaxs.length === 0) {
+        return '\n게임 참가자가 없습니다!'
+    }
     let hasKakdugi = checkHasKakdugi(syntaxs);
     let teams = makeTeam(numberOfTeam, syntaxs, hasKakdugi);
     for (let i = 0; i < numberOfTeam; i++) {
-        result += '\n';
-        result += `${i + 1}팀 : `
+        let line = `\n${i + 1}팀 : `
         teams[i].forEach(mem => {
-            result += mem + ', ';
+            line += mem + ', ';
         })
-        result = result.slice(0, -2);
+        result += line.slice(0, -2);
     }
     if (hasKakdugi) {
-        result += '\n';
-        result += `깍두기 : `
+        let line = `\n깍두기 : `;
         teams.pop().forEach(mem => {
-            result += mem + ', ';
+            line += mem + ', ';
         })
-        result = result.slice(0, -2);
+        result += line.slice(0, -2);
     }
     return result;
 }
 
 checkNumberOfTeam = syntaxs => {
-    result = 0;
-    if (isNaN(+syntaxs[0])) {
-        result = 2;
-    } else {
+    result = 2;
+    if (!isNaN(+syntaxs[0])) {
         result = +syntaxs.shift();
     }
     return result;
